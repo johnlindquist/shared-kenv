@@ -3,10 +3,12 @@
 // Author: John Lindquist
 // Twitter: @johnlindquist
 
-let anime = await arg('Anime:')
+let anime = await arg("Anime:")
 
-let response = await get(`https://api.jikan.moe/v3/search/anime?q=${anime}`)
+let response = await get(
+  `https://api.jikan.moe/v3/search/anime?q=${anime}`
+)
 
-let {image_url, title} = response.data.results[0]
+let { image_url, title } = response.data.results[0]
 
-showImage(image_url, {title})
+showImage(image_url, { title })

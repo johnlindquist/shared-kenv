@@ -4,21 +4,23 @@
 // Twitter: @johnlindquist
 
 let bookmarks = await readFile(
-  home('Library/Application Support/Google/Chrome/Default/Bookmarks'),
+  home(
+    "Library/Application Support/Google/Chrome/Default/Bookmarks"
+  )
 )
 
 bookmarks = JSON.parse(bookmarks)
 bookmarks = bookmarks.roots.bookmark_bar.children
 
 let url = await arg(
-  'Select bookmark',
-  bookmarks.map(({name, url}) => {
+  "Select bookmark",
+  bookmarks.map(({ name, url }) => {
     return {
       name,
       description: url,
       value: url,
     }
-  }),
+  })
 )
 
-exec(`open ${url}`)
+exec(`open "${url}"`)

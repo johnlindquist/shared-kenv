@@ -3,19 +3,18 @@
 // Author: John Lindquist
 // Twitter: @johnlindquist
 
-let gis = await npm('g-i-s')
+let gis = await npm("g-i-s")
 
-await arg('Search for images:', async (input) => {
-  console.log({input})
+await arg("Search for images:", async input => {
   if (input.length < 3) return ``
 
-  let searchResults = await new Promise((res) => {
+  let searchResults = await new Promise(res => {
     gis(input, (_, results) => {
       res(results)
     })
   })
 
   return `<div class="flex flex-wrap">${searchResults
-    .map(({url}) => `<img class="h-32" src="${url}" />`)
-    .join('')}</div>`
+    .map(({ url }) => `<img class="h-32" src="${url}" />`)
+    .join("")}</div>`
 })

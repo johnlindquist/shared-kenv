@@ -3,21 +3,22 @@
 // Author: John Lindquist
 // Twitter: @johnlindquist
 
-let sharp = await npm('sharp')
+let sharp = await npm("sharp")
 
-let image = await arg('Search an image:', async (input = '') => {
+let image = await arg("Search an image:", async input => {
   if (input.length < 3) return []
-  let files = await fileSearch(input, {kind: 'image'})
+  let files = await fileSearch(input, { kind: "image" })
 
-  return files.map((path) => {
+  return files.map(path => {
     return {
-      name: path.split('/').pop(),
+      name: path.split("/").pop(),
       value: path,
       info: path,
     }
   })
 })
 
-let {width, height} = await sharp(image).metadata()
+let { width, height } = await sharp(image).metadata()
 
-console.log({width, height})
+console.log({ width, height })
+edit(kenvPath("logs", "image-info.log"))

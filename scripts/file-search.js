@@ -7,19 +7,20 @@
  * File search will be a _big_ focus in future versions of Script Kit
  */
 
-let {fileSearch} = await kit('file')
+let selectedFile = await arg(
+  "Search a file:",
+  async input => {
+    if (input?.length < 4) return []
+    let files = await fileSearch(input)
 
-let selectedFile = await arg('Search a file:', async (input) => {
-  if (input?.length < 4) return []
-  let files = await fileSearch(input)
-
-  return files.map((path) => {
-    return {
-      name: path.split('/').pop(),
-      value: path,
-      info: path,
-    }
-  })
-})
+    return files.map(path => {
+      return {
+        name: path.split("/").pop(),
+        description: path,
+        value: path,
+      }
+    })
+  }
+)
 
 exec(`open ${selectedFile}`)

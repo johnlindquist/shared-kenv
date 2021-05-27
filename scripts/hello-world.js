@@ -3,6 +3,5 @@
 // Author: John Lindquist
 // Twitter: @johnlindquist
 
-let {say} = await kit('speech')
 let name = await arg(`What's your name?`)
 say(`Hello, ${name}!`)

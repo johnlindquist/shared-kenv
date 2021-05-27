@@ -2,6 +2,5 @@
 // Author: John Lindquist
 // Twitter: @johnlindquist
 
-let {focusTab} = await kit('chrome')
-let url = await arg('Enter url:')
+let url = await arg("Enter url:")
 focusTab(url)

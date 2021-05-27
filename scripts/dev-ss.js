@@ -3,6 +3,6 @@
 // Author: John Lindquist
 // Twitter: @johnlindquist
 
-exec(`code ~/projects/scriptkit.com`)
+edit(`~/projects/scriptkit.com`)
 iterm(`cd ~/projects/scriptkit.com; vercel dev`)
-await kit('chrome-tab', 'localhost:3000')
+await focusTab("http://localhost:3000")

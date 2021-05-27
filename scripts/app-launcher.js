@@ -3,25 +3,23 @@
 // Author: John Lindquist
 // Twitter: @johnlindquist
 
-let {fileSearch} = await kit('file')
-
 let createChoices = async () => {
-  let apps = await fileSearch('', {
-    onlyin: '/',
-    kind: 'application',
+  let apps = await fileSearch("", {
+    onlyin: "/",
+    kind: "application",
   })
 
-  let prefs = await fileSearch('', {
-    onlyin: '/',
-    kind: 'preferences',
+  let prefs = await fileSearch("", {
+    onlyin: "/",
+    kind: "preferences",
   })
 
-  let group = (path) => (apps) =>
+  let group = path => apps =>
     apps
-      .filter((app) => app.match(path))
+      .filter(app => app.match(path))
       .sort((a, b) => {
-        let aName = a.replace(/.*\//, '')
-        let bName = b.replace(/.*\//, '')
+        let aName = a.replace(/.*\//, "")
+        let bName = b.replace(/.*\//, "")
 
         return aName > bName ? 1 : aName < bName ? -1 : 0
       })
@@ -32,27 +30,22 @@ let createChoices = async () => {
     ...group(/^\/Applications\/Utilities/)(apps),
     ...group(/System/)(apps),
     ...group(/Users/)(apps),
-  ].map((value) => {
+  ].map(value => {
     return {
-      name: value.split('/').pop().replace('.app', ''),
+      name: value.split("/").pop().replace(".app", ""),
       value,
       description: value,
     }
   })
 }
 
-let appsDb = db('apps', {choices: []})
-let choices = appsDb.get('choices').value()
-if (!choices.length) {
-  appsDb.set('choices', await createChoices()).write()
-  choices = appsDb.get('choices').value()
-}
+let appsDb = await db("apps", async () => ({
+  choices: await createChoices(),
+}))
 
-let app = await arg('Select app:', choices)
+let app = await arg("Select app:", appsDb.choices)
 let command = `open -a "${app}"`
-if (app.endsWith('.prefPane')) {
+if (app.endsWith(".prefPane")) {
   command = `open ${app}`
 }
-exec(command, {
-  env: {}, //clear the env. Script NODE_PATH/NODE_OPTIONS may conflict.
-})
+exec(command)

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+KENV=$(cd "$(dirname ${BASH_SOURCE[0]})"/.. &> /dev/null && pwd) \
+/Users/johnlindquist/.kit/node/bin/node \
+/Users/johnlindquist/.kit/mac-terminal.js \
+/Users/johnlindquist/projects/shared-kenv/scripts/new-journal-entry.js \
+"$@"

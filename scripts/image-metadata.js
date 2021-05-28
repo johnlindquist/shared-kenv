@@ -1,4 +1,4 @@
-// Menu: Image Metadata
+// Menu: Detect Image Width and Height
 // Description: Show the metadata of an image
 // Author: John Lindquist
 // Twitter: @johnlindquist
@@ -13,7 +13,7 @@ let image = await arg("Search an image:", async input => {
     return {
       name: path.split("/").pop(),
       value: path,
-      info: path,
+      description: path,
     }
   })
 })
@@ -21,4 +21,4 @@ let image = await arg("Search an image:", async input => {
 let { width, height } = await sharp(image).metadata()
 
 console.log({ width, height })
-edit(kenvPath("logs", "image-info.log"))
+await arg(`Width: ${width} Height: ${height}`)

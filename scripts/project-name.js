@@ -3,12 +3,11 @@
 // Author: John Lindquist
 // Twitter: @johnlindquist
 
-let {default: generate} = await npm('project-name-generator')
+let { generate } = await npm("project-name-generator")
 
-const name = generate({word: 2, alliterative: true}).dashed
+const name = generate({
+  word: 2,
+  alliterative: true,
+}).dashed
 
-copy(name)
-
-console.log(
-  `> "${name}" has been copied to the clipboard. Paste anywhere to see it.`,
-)
+await setSelectedText(name)

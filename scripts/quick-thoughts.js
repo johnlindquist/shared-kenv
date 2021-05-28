@@ -3,17 +3,17 @@
 // Author: John Lindquist
 // Twitter: @johnlindquist
 
-let {format} = await npm('date-fns')
+let { format } = await npm("date-fns")
 
-let date = format(new Date(), 'yyyy-MM-dd')
-let thoughtsPath = await env('THOUGHTS_PATH')
-let thoughtFile = path.join(thoughtsPath, date + '.md')
+let date = format(new Date(), "yyyy-MM-dd")
+let thoughtsPath = await env("THOUGHTS_PATH")
+let thoughtFile = path.join(thoughtsPath, date + ".md")
 
 let firstEntry = true
-let addThought = async (thought) => {
+let addThought = async thought => {
   if (firstEntry) {
     thought = `
-- ${format(new Date(), 'hh:mmaa')}
+- ${format(new Date(), "hh:mmaa")}
   ${thought}\n`
     firstEntry = false
   } else {
@@ -24,20 +24,24 @@ let addThought = async (thought) => {
 }
 
 let openThoughtFile = async () => {
-  let {stdout} = exec(`wc ${thoughtFile}`, {
+  let { stdout } = exec(`wc ${thoughtFile}`, {
     silent: true,
   })
-  let lineCount = stdout.trim().split(' ').shift()
+  let lineCount = stdout.trim().split(" ").shift()
   edit(thoughtFile, thoughtsPath, lineCount + 1) //open with cursor at end
   await wait(500)
   exit()
 }
 
-if (!(await isFile(thoughtFile))) await writeFile(thoughtFile, `# ${date}\n`)
+if (!(await isFile(thoughtFile)))
+  await writeFile(thoughtFile, `# ${date}\n`)
 
 while (true) {
-  let thought = await arg('Thought:')
-  if (thought === 'open') {
+  let thought = await arg({
+    placeholder: "Thought:",
+    hint: `Type "open" to open journal`,
+  })
+  if (thought === "open") {
     await openThoughtFile()
   } else {
     await addThought(thought)

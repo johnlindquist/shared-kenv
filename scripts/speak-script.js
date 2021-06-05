@@ -3,14 +3,16 @@
 // Author: John Lindquist
 // Twitter: @johnlindquist
 
-let {scripts} = await cli('scripts')
+let { scripts } = await db("scripts")
 
-let escapedScripts = scripts.map((script) => ({
+let escapedScripts = scripts.map(script => ({
   name: `"${script.name.replace(/"/g, '\\"')}"`, //escape quotes
-  value: script.value,
+  value: script.filePath,
 }))
 
-let speakableScripts = escapedScripts.map(({name}) => name).join(',')
+let speakableScripts = escapedScripts
+  .map(({ name }) => name)
+  .join(",")
 
 let speech = await applescript(String.raw`
 tell application "SpeechRecognitionServer"
@@ -18,6 +20,8 @@ tell application "SpeechRecognitionServer"
 end tell
 `)
 
-let script = escapedScripts.find((script) => script.name == `"${speech}"`)
+let script = escapedScripts.find(
+  script => script.name == `"${speech}"`
+)
 
 await run(script.value)

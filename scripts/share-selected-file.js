@@ -4,42 +4,42 @@
 // Twitter: @johnlindquistt
 // Background: true
 
-let ngrok = await npm('ngrok')
-let handler = await npm('serve-handler')
-let cleanup = await npm('node-cleanup')
-let http = await import('http')
-
-//requires that a file is selected in Finder
-let {getSelectedFile} = await kit('file')
-
-let tmpPath = tmp()
-let basePath = cwd()
-
-cd(tmpPath)
+let ngrok = await npm("ngrok")
+let handler = await npm("serve-handler")
+let exitHook = await npm("exit-hook")
+let http = await import("http")
 
 let filePath = await getSelectedFile()
 
-let symLink = _.last(filePath.split(path.sep)).replaceAll(' ', '-')
-let symLinkPath = path.join(tmpPath, symLink)
+let symLinkName = _.last(
+  filePath.split(path.sep)
+).replaceAll(" ", "-")
+let symLinkPath = tmp(symLinkName)
 
-echo(`Creating temporary symlink: ${symLinkPath}`)
+console.log(`Creating temporary symlink: ${symLinkPath}`)
 ln(filePath, symLinkPath)
 
 let port = 3033
 
 const server = http.createServer(handler)
 
+cd(tmp())
+
 server.listen(port, async () => {
   let tunnel = await ngrok.connect(port)
-  let shareLink = tunnel + '/' + symLink
-  echo(chalk`{yellow ${shareLink}} copied to clipboard`)
+  let shareLink = tunnel + "/" + symLinkName
+  console.log(
+    chalk`{yellow ${shareLink}} copied to clipboard`
+  )
   copy(shareLink)
 })
 
-cleanup(() => {
+exitHook(() => {
   server.close()
-  if (test('-f', symLinkPath)) {
-    echo(`Removing temporary symlink: ${symLinkPath}`)
-    trash(symLinkPath)
+  if (test("-f", symLinkPath)) {
+    console.log(
+      `Removing temporary symlink: ${symLinkPath}`
+    )
+    exec(`rm ${symLinkPath}`)
   }
 })

@@ -3,37 +3,38 @@
 // Author: John Lindquist
 // Twitter: @johnlindquist
 
-await npm('wordnet-db')
-let randomWord = await npm('random-word')
-let {WordNet} = await npm('natural')
+await npm("wordnet-db")
+let randomWord = await npm("random-word")
+let { WordNet } = await npm("natural")
 
 let wordNet = new WordNet()
 let words = []
 
-let quiz = async () => {
+while (true) {
+  setPlaceholder(`Finding random word and definitions...`)
+
+  while (words.length < 4) {
+    let quizWord = randomWord()
+    let results = await new Promise(resolve => {
+      wordNet.lookup(quizWord, resolve)
+    })
+    if (results.length) {
+      let [{ lemma, def }] = results
+      words.push({ name: def, value: lemma })
+    }
+  }
+
   let word = words[0]
-  let result = await arg(`What does "${word.value}" mean?`, _.shuffle(words))
+  let result = await arg(
+    `What does "${word.value}" mean?`,
+    _.shuffle(words)
+  )
 
   let correct = word.value === result
-  setPlaceholder(`${correct ? '✅' : '🚫'} ${word.value}: ${word.name}`)
-  await wait(2000)
+  setPlaceholder(
+    `${correct ? "✅" : "🚫"} ${word.value}: ${word.name}`
+  )
   words = []
-  prepareWords()
-}
 
-let prepareWords = () => {
-  setPlaceholder(`Finding random word and definitions...`)
-  wordNet.lookup(randomWord(), (results) => {
-    if (results.length) {
-      let [{lemma, def}] = results
-      words.push({name: def, value: lemma})
-      if (words.length == 4) {
-        quiz()
-        return
-      }
-    }
-    prepareWords()
-  })
+  await wait(2000)
 }
-
-prepareWords()

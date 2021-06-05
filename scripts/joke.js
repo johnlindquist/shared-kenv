@@ -9,4 +9,6 @@ let response = await get(`https://icanhazdadjoke.com/`, {
   },
 })
 
-say(response.data)
+let joke = response.data
+setPanel(joke)
+say(joke)

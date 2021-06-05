@@ -3,8 +3,7 @@
 // Author: John Lindquist
 // Twitter: @johnlindquist
 
-let {titleCase} = await npm('title-case')
-let {getSelectedText, setSelectedText} = await kit('text')
+let { titleCase } = await npm("title-case")
 
 let text = await getSelectedText()
 let titleText = titleCase(text)
